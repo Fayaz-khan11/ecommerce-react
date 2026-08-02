@@ -1,6 +1,25 @@
+import { useState } from "react";
 import { getProducts } from "../data/Products.js";
+
 export default function Home() {
+    const [productCounts, setProductCounts] = useState({});
     const products = getProducts();
+    
+    function addToCart(productId) {
+        setProductCounts((prevCounts) => ({
+            ...prevCounts,
+            [productId]: (prevCounts[productId] || 0) + 1,
+        }));
+    }
+
+    const viewDetail = (productId) => {
+        const product = products.find((p) => p.id === productId);
+        if(product) {
+            window.location.href = `/checkout/${productId}`;
+        }
+        return;
+    }
+
     return (
         <div className="home">
             <div className="welcome-title">
@@ -25,8 +44,12 @@ export default function Home() {
                                         <p>{product.description}</p>
                                         <p>£{product.price}</p>
 
-                                        <button className="btn btn-secondary">view details</button>
-                                        <button className="btn btn-primary ms-1">Add to cart</button>
+                                        <button className="btn btn-secondary" onClick={() => viewDetail(product.id)}>
+                                            view details
+                                        </button>
+                                        <button className="btn btn-primary ms-1" onClick={() => addToCart(product.id)}>
+                                            Add to cart ({productCounts[product.id] || 0})
+                                        </button>
                                     </div>
                                 </div>
                             </div>
