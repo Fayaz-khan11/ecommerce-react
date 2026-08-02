@@ -21,7 +21,7 @@ export default function Navbar() {
                 <Links to="/" style={style}>
                     Home
                 </Links>
-                <Links to="/checkout" style={style}>
+                <Links to="/checkout/:id" style={style}>
                     Cart
                 </Links>
                 {user ? (

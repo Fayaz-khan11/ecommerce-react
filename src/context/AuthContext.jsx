@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext(null);
 
@@ -15,6 +16,7 @@ function getStoredCurrentUser() {
 }
 
 export default function AuthProvider({ children }) {
+    const navigate = useNavigate();
     const [user, setUser] = useState(() => getStoredCurrentUser());
 
     useEffect(() => {
@@ -65,6 +67,7 @@ export default function AuthProvider({ children }) {
 
     function signOut() {
         setUser(null);
+        navigate("/");
         return { success: true, message: "User logged out successfully" };
     }
 
