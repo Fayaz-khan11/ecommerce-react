@@ -1,24 +1,26 @@
-import { useState } from "react";
+import { useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { getProducts } from "../data/Products.js";
+import { CartContext } from "../context/CartContext";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Home() {
-    const [productCounts, setProductCounts] = useState({});
+    const { cartCounts, addToCart } = useContext(CartContext);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { user, signOut } = useContext(AuthContext);
+
+
+    const navigate = useNavigate();
     const products = getProducts();
-    
-    function addToCart(productId) {
-        setProductCounts((prevCounts) => ({
-            ...prevCounts,
-            [productId]: (prevCounts[productId] || 0) + 1,
-        }));
-    }
 
     const viewDetail = (productId) => {
-        const product = products.find((p) => p.id === productId);
-        if(product) {
-            window.location.href = `/checkout/${productId}`;
-        }
-        return;
-    }
+        navigate(`/checkout/${productId}`);
+    };
+
+
+    useEffect(() => {
+        setIsLoggedIn(!!user);
+    }, [user]);
 
     return (
         <div className="home">
@@ -39,7 +41,7 @@ export default function Home() {
                                         className="card-img-top"
                                         alt={product.name}
                                     />
-                                    <div className="card-body" style={{height: "238px"}}>
+                                    <div className="card-body" style={{ height: "238px" }}>
                                         <h5>{product.name}</h5>
                                         <p>{product.description}</p>
                                         <p>£{product.price}</p>
@@ -48,9 +50,9 @@ export default function Home() {
                                             view details
                                         </button>
                                         <button className="btn btn-primary ms-1" onClick={() => addToCart(product.id)}>
-                                            Add to cart ({productCounts[product.id] || 0})
+                                            Add to cart ({isLoggedIn ? cartCounts[product.id] : 0})
                                         </button>
-                                    </div>
+                                    </div>``
                                 </div>
                             </div>
                         );

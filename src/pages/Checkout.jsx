@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { getProducts } from "../data/Products";
+import { CartContext } from "../context/CartContext";
 import "../assets/css/checkout.css";
 
 export default function Checkout() {
     const { id } = useParams();
+    const { addToCart } = useContext(CartContext);
+    const navigate = useNavigate();
 
     const [product, setProduct] = useState(null);
     const [quantity, setQuantity] = useState(1);
@@ -34,12 +37,9 @@ export default function Checkout() {
 
     const totalPrice = (product.price * quantity).toFixed(2);
 
-    const addToCart = () => {
-        console.log({
-            productId: product.id,
-            quantity,
-            totalPrice,
-        });
+    const addToCartClick = () => {
+        addToCart(product.id, quantity);
+        navigate("/");
     };
 
     return (
@@ -100,7 +100,7 @@ export default function Checkout() {
 
             <button
                 className="btn btn-primary w-100"
-                onClick={addToCart}
+                onClick={addToCartClick}
             >
                 Buy Now
             </button>

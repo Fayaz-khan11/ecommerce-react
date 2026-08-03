@@ -1,9 +1,17 @@
 import { Link as Links } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { CartContext } from "../context/CartContext";
 
 export default function Navbar() {
     const { user, signOut } = useContext(AuthContext);
+    const { totalCount } = useContext(CartContext);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        setIsLoggedIn(!!user);
+    }, [user]);
+
 
     const style = {
         textDecoration: "none",
@@ -21,8 +29,8 @@ export default function Navbar() {
                 <Links to="/" style={style}>
                     Home
                 </Links>
-                <Links to="/checkout/:id" style={style}>
-                    Cart
+                <Links to="/cart" style={style}>
+                    Cart ({isLoggedIn ? totalCount : (0)})
                 </Links>
                 {user ? (
                     <>
